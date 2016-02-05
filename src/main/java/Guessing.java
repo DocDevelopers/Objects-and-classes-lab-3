@@ -9,9 +9,8 @@ public class Guessing {
     private Scanner scanner;
     private int tries = 0; // number of tries counter.
     private int input = 0;
-    private int prevInput = 0;
+    private int prevInput = -1;
     private int secretNumber;
-    private boolean firstTry = true;
 
     public static void main(String args[]){
         Guessing guessGame = new Guessing();
@@ -28,32 +27,29 @@ public class Guessing {
         //Get input from user and print out message.
         checkNumber();
         //When checkNumber returns, print the number of tries needed.
-        System.out.println("The number of tries you needed was "+tries);
+        System.out.println("The number of tries it took you to find the secret number was "+tries);
     }
 
 
     public void checkNumber(){
         System.out.println("Enter the secret number:");
 
-        input = scanner.nextInt();
-        //Check if we are not in the first try and if current number is the same as the last.
-        //The boolean makes sure that the user doesn't get penalized if their first try is 0.
-        if(input != prevInput || firstTry && input == 0) {
-            tries++;
-        }else if(firstTry && input == 0) {
-            firstTry = false;
-            tries++;
-        }else{
-            firstTry = false;
+        //Validate input.
+        while(!scanner.hasNextInt()){
+            System.out.println("That's not a number!");
+            scanner.next(); // this is important!
         }
 
+        input = scanner.nextInt();
+
+        //If they entered something different... Add one try
+        if(input != prevInput)
+            tries++;
 
         if(input == secretNumber){
             System.out.println("Congratulations, "+ secretNumber+" is the secret number!");
             return;
         }
-
-
 
         //Set the prevInput equal to current in preparation of next iteration.
         prevInput = input;
@@ -67,7 +63,5 @@ public class Guessing {
             System.out.println("Your guess was too small");
             checkNumber();//reiterate.
         }
-
-        return;
     }
 }
